@@ -4,7 +4,7 @@ const RecentOrders = () => {
   return (
     <div className="recent-order">
       <h2>Pedidos Recentes</h2>
-      <table>
+      <table id='table-order'>
         <thead>
           <tr>
             <th>Nome do Produto</th>

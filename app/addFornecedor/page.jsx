@@ -2,29 +2,51 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router"; // Use o useRouter apenas em Client Components
+import supabase from "@/supabase";
 
 const AdicionarFornecedor = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    company: "",
-    product: "",
-    cep: "",
-    address: "",
-    number: "",
-    city: "",
-    state: "",
-  });
+  const [formData, setFormData] = useState({});
 
   useEffect(() => {
     // Código que depende do estado ou de outras interações com a interface
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Lógica para salvar fornecedor
     console.log(formData); // Exemplo de uso, substitua com sua lógica de salvamento
+
+    const address = {
+      rua: formData.address,
+      numero: formData.number,
+      cidade: formData.city,
+      estado: formData.state,
+      bairro: formData.bairro,
+      complemento: formData.complemento,
+    };
+
+    const { error: errorAddress, data: insertedAdress } = await supabase
+      .from("EnderecoFornecedor")
+      .insert(address)
+      .select("id");
+
+    if (errorAddress) console.error(errorSupplier);
+
+    console.log(insertedAdress);
+
+    const supplier = {
+      nome: formData.name,
+      telefone: formData.phone,
+      cnpj: formData.company,
+      produto_fornecido: formData.product,
+      endereco: insertedAdress[0].id,
+    };
+
+    const { error: errorSupplier } = await supabase
+      .from("Fornecedor")
+      .insert(supplier);
+
+    if (errorSupplier) console.error(errorSupplier);
   };
 
   const handleInputChange = (e) => {
@@ -45,7 +67,7 @@ const AdicionarFornecedor = () => {
       <h1 className="form-title">Adicionar Fornecedor</h1>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Nome</label>
+          <label htmlFor="name">Nome da Empresa</label>
           <input
             type="text"
             id="name"
@@ -65,7 +87,7 @@ const AdicionarFornecedor = () => {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="company">Empresa</label>
+          <label htmlFor="company">CNPJ</label>
           <input
             type="text"
             id="company"
@@ -131,6 +153,26 @@ const AdicionarFornecedor = () => {
             type="text"
             id="state"
             value={formData.state}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="bairro">Bairro</label>
+          <input
+            type="text"
+            id="bairro"
+            value={formData.bairro}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="complemento">Complemento</label>
+          <input
+            type="text"
+            id="complemento"
+            value={formData.complemento}
             onChange={handleInputChange}
             required
           />

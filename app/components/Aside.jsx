@@ -54,7 +54,7 @@ const Aside = () => {
         </Link>
         
         <Link href="/produto">
-          <Inventory />
+          <Inventory2 />
           <h3>Produtos</h3>
         </Link>
         
@@ -69,7 +69,7 @@ const Aside = () => {
         </Link>
 
         <Link href="/fornecedores">
-          <Inventory2 />
+          <Inventory />
           <h3>Fornecedores</h3>
         </Link>
         

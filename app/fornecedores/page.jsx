@@ -1,13 +1,32 @@
 "use client"; // Adiciona esta linha no início para indicar que este é um Client Component
 
-import React, { useEffect } from "react";
-
+import React, { useEffect, useState } from "react";
+import supabase from "@/supabase";
 
 const Fornecedores = () => {
+  const [fornecedores, setFornecedores] = useState([]);
 
   useEffect(() => {
-    // Exemplo de uso de useEffect
-    console.log("Página carregada");
+    const fetchFornecedores = async () => {
+      const { data: fornecedoresData, error } = await supabase
+        .from("Fornecedor")
+        .select(`
+          id,
+          nome,
+          telefone,
+          cnpj,
+          produto_fornecido,
+          endereco ( rua, numero, cidade)
+        `); // Faz o relacionamento com a tabela de EnderecoFornecedor via chave estrangeira 'endereco'
+
+      if (error) {
+        console.error("Erro ao buscar fornecedores: ", error);
+      } else {
+        setFornecedores(fornecedoresData); // Armazena os fornecedores com seus endereços
+      }
+    };
+
+    fetchFornecedores();
   }, []);
 
   return (
@@ -18,10 +37,11 @@ const Fornecedores = () => {
         </section>
 
         <div className="add-supplier">
-            <a href="/addFornecedor">
-              <button>Adicionar Fornecedor</button>
-            </a>
-          </div>
+          <a href="/addFornecedor">
+            <button>Adicionar Fornecedor</button>
+          </a>
+        </div>
+
         <section className="suppliers-table">
           <table>
             <thead>
@@ -33,26 +53,32 @@ const Fornecedores = () => {
                 <th>Rua</th>
                 <th>Número</th>
                 <th>Cidade</th>
-                <th>CEP</th>
                 <th>Ações</th>
               </tr>
             </thead>
             <tbody id="supplier-list">
-              {/* Exemplo de fornecedores */}
-              <tr data-index="0">
-                <td>Fornecedor 1</td>
-                <td>(11) 99999-9999</td>
-                <td>Empresa 1</td>
-                <td>Produto X</td>
-                <td>Rua A</td>
-                <td>123</td>
-                <td>Cidade A</td>
-                <td>12345-678</td>
-                <td>
-                  <button onClick={() => editarFornecedor(0)}>Editar</button>
-                </td>
-              </tr>
-              {/* Fornecedores serão carregados aqui dinamicamente */}
+              {fornecedores.length > 0 ? (
+                fornecedores.map((fornecedor, index) => (
+                  <tr key={fornecedor.id}>
+                    <td>{fornecedor.nome}</td>
+                    <td>{fornecedor.telefone}</td>
+                    <td>{fornecedor.cnpj}</td>
+                    <td>{fornecedor.produto_fornecido}</td>
+                    <td>{fornecedor.endereco ? fornecedor.endereco.rua : "N/A"}</td>
+                    <td>{fornecedor.endereco ? fornecedor.endereco.numero : "N/A"}</td>
+                    <td>{fornecedor.endereco ? fornecedor.endereco.cidade: "N/A"}</td>
+                    <td>
+                      <button onClick={() => editarFornecedor(index)}>
+                        Editar
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="9">Nenhum fornecedor encontrado</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </section>
