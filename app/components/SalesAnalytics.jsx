@@ -1,5 +1,5 @@
 import React from 'react';
-import { LocalMall, ShoppingCart } from '@mui/icons-material';
+import { AddBox, LocalMall, ShoppingCart } from '@mui/icons-material';
 
 const SalesAnalytics = () => {
   return (
@@ -36,7 +36,7 @@ const SalesAnalytics = () => {
 
       <div className="item add-product">
         <div>
-          <span className="material-icons">add</span>
+          <AddBox />
           <h3>Adicionar Produto</h3>
         </div>
       </div>

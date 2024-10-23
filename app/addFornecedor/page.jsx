@@ -45,6 +45,7 @@ const AdicionarFornecedor = () => {
     const { error: errorSupplier } = await supabase
       .from("Fornecedor")
       .insert(supplier);
+      alert("Dados cadastrados no sistema!")
 
     if (errorSupplier) console.error(errorSupplier);
   };
@@ -76,6 +77,7 @@ const AdicionarFornecedor = () => {
             required
           />
         </div>
+        <div className="form-row">
         <div className="form-group">
           <label htmlFor="phone">Telefone</label>
           <input
@@ -95,6 +97,7 @@ const AdicionarFornecedor = () => {
             onChange={handleInputChange}
             required
           />
+        </div>
         </div>
         <div className="form-group">
           <label htmlFor="product">Produto Principal</label>

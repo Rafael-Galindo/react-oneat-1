@@ -5,7 +5,6 @@ import Aside from '../components/Aside';
 export default function Page () {
   return (
     <div>
-    <Aside />
     <main>
       <h1>Pedidos</h1>
 
