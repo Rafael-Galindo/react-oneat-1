@@ -388,6 +388,7 @@ main .recent-order a {
   display: flex;
   justify-content: end;
   gap: 2rem;
+  height: 50px;
 }
 
 .right .top button {
@@ -725,12 +726,26 @@ main {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 300ms ease;
   margin-bottom: 20px;
 }
 
 .add-supplier button:hover {
-  background-color: #008c7a;
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.sup-supplier {
+  width: 130%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.sup-supplier .stats-total {
+  margin-bottom: 20px;
+  font-size: 15px;
 }
 
 .suppliers-table {
@@ -768,28 +783,30 @@ td {
   color: #555;
 }
 
-button.edit-btn,
-button.delete-btn {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px;
+
+.edit-btn {
+  margin-right: 5px;
+  width: 50px;
+  background-color: transparent;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
   cursor: pointer;
-  margin-right: 0.5rem;
-  transition: background-color 0.3s;
+  transition: background 300ms ease, color 300ms ease; /* Adicione transições para cor e fundo */
 }
 
-button.edit-btn {
-  background-color: var(--color-primary);
-  color: white;
-}
-
-button.edit-btn:hover {
-  background-color: #008c7a;
+.edit-btn:hover {
+  background: var(--color-primary) !important; /* Defina a cor de fundo ao passar o mouse */
+  color: white !important; /* Mude a cor do texto para branco */
 }
 
 button.delete-btn {
-  background-color: #e57373;
-  color: white;
+  margin-left: 5px;
+  width: 50px;
+  background-color: transparent;
+  color: #d32f2f;
+  border: 2px solid #d32f2f;
+  cursor: pointer;
+  transition: all 300ms ease;
 }
 
 button.delete-btn:hover {

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import supabase from "@/supabase";
+import { Delete, Edit } from "@mui/icons-material";
 
 const Fornecedores = () => {
   const [fornecedores, setFornecedores] = useState([]);
@@ -36,11 +37,16 @@ const Fornecedores = () => {
           <h1>Fornecedores</h1>
         </section>
 
+    <div className="sup-supplier">
         <div className="add-supplier">
           <a href="/addFornecedor">
             <button>Adicionar</button>
           </a>
         </div>
+        <div className="stats-total">
+          <p><b>Total de Registros:</b> {fornecedores.length}</p>
+        </div>
+      </div>
 
         <section className="suppliers-table">
           <table>
@@ -68,8 +74,11 @@ const Fornecedores = () => {
                     <td>{fornecedor.endereco ? fornecedor.endereco.numero : "N/A"}</td>
                     <td>{fornecedor.endereco ? fornecedor.endereco.cidade: "N/A"}</td>
                     <td>
-                      <button onClick={() => editarFornecedor(index)}>
-                        Editar
+                      <button className='edit-btn' onClick={() => editarFornecedor(index)}>
+                        <Edit />
+                      </button>
+                      <button className='delete-btn' onClick={() => deletarFornecedor(index)}>
+                        <Delete />
                       </button>
                     </td>
                   </tr>
