@@ -38,7 +38,7 @@ const Fornecedores = () => {
 
         <div className="add-supplier">
           <a href="/addFornecedor">
-            <button>Adicionar Fornecedor</button>
+            <button>Adicionar</button>
           </a>
         </div>
 
