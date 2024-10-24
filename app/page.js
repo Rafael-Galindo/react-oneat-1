@@ -1,9 +1,7 @@
-import Dashboard from "./components/Dashboard";
+import Login from './login/page.jsx'
 
 export default function Home() {
   return (
-    <div>
-      <Dashboard />
-    </div>
+      <Login />
   );
 }

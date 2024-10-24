@@ -3,12 +3,13 @@ import RightPanel from "./components/RightPanel";
 import "./globals.css";
 
 export default function RootLayout({ children }) {
+  const isLoggedIn = false;
   return (
     <html lang="pt-br">
       <body className="conteudo">
-        <Aside />
+        {isLoggedIn ? (<><Aside /> <RightPanel /></>): null}
+        
         {children}
-        <RightPanel />
       </body>
     </html>
   );
