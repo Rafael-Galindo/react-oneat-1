@@ -2,10 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import supabase from "@/supabase";
-import { Delete, Edit } from "@mui/icons-material";
+import { ArrowBack, ArrowForward, Delete, Edit } from "@mui/icons-material";
+import Swal from "sweetalert2"; // Certifique-se de que o SweetAlert2 está instalado
 
 const Fornecedores = () => {
   const [fornecedores, setFornecedores] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Página atual
+  const recordsPerPage = 7; // Limite de registros por página
+  const [filtro, setFiltro] = useState(""); // Estado para o filtro
 
   useEffect(() => {
     const fetchFornecedores = async () => {
@@ -18,7 +22,7 @@ const Fornecedores = () => {
           cnpj,
           produto_fornecido,
           endereco ( rua, numero, cidade)
-        `); // Faz o relacionamento com a tabela de EnderecoFornecedor via chave estrangeira 'endereco'
+        `);
 
       if (error) {
         console.error("Erro ao buscar fornecedores: ", error);
@@ -30,6 +34,81 @@ const Fornecedores = () => {
     fetchFornecedores();
   }, []);
 
+  // Função para deletar um fornecedor
+  const deletarFornecedor = async (id) => {
+    // Exibir um alerta de confirmação
+    Swal.fire({
+      title: 'Você tem certeza?',
+      text: "Essa ação não pode ser desfeita!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Deletar',
+      cancelButtonText: 'Cancelar',
+      customClass: {
+        confirmButton: 'btn-confirm', // Classe personalizada para o botão de confirmação
+        cancelButton: 'btn-cancel',
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // Se o usuário confirmar, deletar o fornecedor
+        const { error } = await supabase
+          .from("Fornecedor")
+          .delete()
+          .eq("id", id);
+
+        if (error) {
+          Swal.fire('Erro!', 'Houve um erro ao deletar o fornecedor.', 'error');
+          console.error("Erro ao deletar fornecedor: ", error);
+        } else {
+          // Atualizar a lista de fornecedores após a exclusão
+          setFornecedores(fornecedores.filter((fornecedor) => fornecedor.id !== id));
+          Swal.fire({
+            title: 'Sucesso!',
+            text: 'Fornecedor deletado com sucesso.',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            customClass: {
+              confirmButton: 'btn-confirm', // Classe personalizada para o botão de confirmação
+            }
+          });
+        }
+      }
+    });
+  };
+
+  // Calcula o número total de páginas com base nos fornecedores filtrados
+  const totalPages = Math.ceil(
+    fornecedores.filter((fornecedor) =>
+      fornecedor.nome.toLowerCase().includes(filtro.toLowerCase()) ||
+      fornecedor.telefone.toLowerCase().includes(filtro.toLowerCase()) ||
+      fornecedor.cnpj.toLowerCase().includes(filtro.toLowerCase()) ||
+      (fornecedor.endereco && fornecedor.endereco.cidade.toLowerCase().includes(filtro.toLowerCase()))
+    ).length / recordsPerPage
+  );
+
+  // Obtém os fornecedores filtrados
+  const fornecedoresFiltrados = fornecedores.filter((fornecedor) =>
+    fornecedor.nome.toLowerCase().includes(filtro.toLowerCase()) ||
+    fornecedor.telefone.toLowerCase().includes(filtro.toLowerCase()) ||
+    fornecedor.cnpj.toLowerCase().includes(filtro.toLowerCase()) ||
+    (fornecedor.endereco && fornecedor.endereco.cidade.toLowerCase().includes(filtro.toLowerCase()))
+  );
+
+  // Obtém os fornecedores da página atual
+  const currentRecords = fornecedoresFiltrados.slice(
+    (currentPage - 1) * recordsPerPage,
+    currentPage * recordsPerPage
+  );
+
+  // Funções para navegar entre as páginas
+  const nextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
+  };
+
   return (
     <div>
       <main>
@@ -37,16 +116,24 @@ const Fornecedores = () => {
           <h1>Fornecedores</h1>
         </section>
 
-    <div className="sup-supplier">
-        <div className="add-supplier">
-          <a href="/addFornecedor">
-            <button>Adicionar</button>
-          </a>
+        <div className="sup-supplier">
+          <div className="add-supplier">
+            <a href="/addFornecedor">
+              <button>Adicionar</button>
+            </a>
+          </div>
+          <section className="filter-section">
+          <input
+            type="text"
+            placeholder="Filtrar por Nome, Telefone, CNPJ ou Cidade"
+            value={filtro}
+            onChange={(e) => setFiltro(e.target.value)} // Atualiza o valor do filtro
+          />
+        </section>
+          <div className="stats-total">
+            <p><b>Total de Registros:</b> {fornecedores.length}</p>
+          </div>
         </div>
-        <div className="stats-total">
-          <p><b>Total de Registros:</b> {fornecedores.length}</p>
-        </div>
-      </div>
 
         <section className="suppliers-table">
           <table>
@@ -63,8 +150,8 @@ const Fornecedores = () => {
               </tr>
             </thead>
             <tbody id="supplier-list">
-              {fornecedores.length > 0 ? (
-                fornecedores.map((fornecedor, index) => (
+              {currentRecords.length > 0 ? (
+                currentRecords.map((fornecedor, index) => (
                   <tr key={fornecedor.id}>
                     <td>{fornecedor.nome}</td>
                     <td>{fornecedor.telefone}</td>
@@ -77,7 +164,7 @@ const Fornecedores = () => {
                       <button className='edit-btn' onClick={() => editarFornecedor(index)}>
                         <Edit />
                       </button>
-                      <button className='delete-btn' onClick={() => deletarFornecedor(index)}>
+                      <button className='delete-btn' onClick={() => deletarFornecedor(fornecedor.id)}>
                         <Delete />
                       </button>
                     </td>
@@ -85,12 +172,23 @@ const Fornecedores = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="9">Nenhum fornecedor encontrado</td>
+                  <td colSpan="8">Nenhum fornecedor encontrado</td>
                 </tr>
               )}
             </tbody>
           </table>
         </section>
+
+        {/* Controles de paginação */}
+        <div className="pagination-controls">
+          <button disabled={currentPage === 1} onClick={prevPage}>
+            <ArrowBack />
+          </button>
+          <span>Página {currentPage} de {totalPages}</span>
+          <button disabled={currentPage === totalPages} onClick={nextPage}>
+            <ArrowForward />
+          </button>
+        </div>
       </main>
     </div>
   );
