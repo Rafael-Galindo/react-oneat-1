@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import supabase from "@/supabase";
 import { ArrowBack, ArrowForward, Delete, Edit } from "@mui/icons-material";
 import Swal from "sweetalert2"; // Certifique-se de que o SweetAlert2 está instalado
+import Aside from "../components/Aside";
 
 const Fornecedores = () => {
   const [fornecedores, setFornecedores] = useState([]);
@@ -111,6 +112,7 @@ const Fornecedores = () => {
 
   return (
     <div>
+      <Aside />
       <main>
         <section className="supplier-header">
           <h1>Fornecedores</h1>

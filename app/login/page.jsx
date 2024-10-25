@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import styles from "./login.css"; 
 import Image from 'next/image'; // Importa o componente Image do Next.js
+import CadastrarRestaurante from '../cadastrarRestaurante/page';
+import Link from 'next/link';
 
 // Importando as imagens da pasta 'img'
 import logo from '../public/img/logo.png';
@@ -20,13 +22,11 @@ function Login() {
   };
 
   return (
-    <div id="page" className="{styles.flex}">
+    <div id="page" className="flex">
       <div>
         <header>
           {/* Usando a imagem do logo */}
-          <a href="../">
             <Image src={logo} alt="Logo" width={150} height={50} /> {/* Defina a largura e altura */}
-          </a>
         </header>
         <main>
           <div className="headline">
@@ -82,9 +82,8 @@ function Login() {
             <button type="submit">Entrar</button>
 
             <div className="create-account">
-              Ainda não tem uma conta?
-              <a href="../cadastro/index.html"> Cadastre-se </a>
-            </div>
+        Ainda não tem uma conta? <Link href="/cadastrarRestaurante">Cadastre-se</Link>
+      </div>
           </form>
         </main>
       </div>

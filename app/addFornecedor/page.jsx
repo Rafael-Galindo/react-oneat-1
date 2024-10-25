@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import supabase from "@/supabase";
 import Swal from "sweetalert2"; // Importa o SweetAlert2
 
+
 // Define a função no escopo global
 window.meu_callback = function (conteudo) {
   if (!("erro" in conteudo)) {
