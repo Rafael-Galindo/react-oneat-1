@@ -8,6 +8,8 @@
 }
 
 body {
+    display: flex;
+    align-items: center;
     font-family: 'Montserrat', sans-serif;
     background-color: #f2f2f2; /* Cor de fundo principal */
     color: #333;
@@ -33,15 +35,16 @@ body::before {
         z-index: -1; /* Faz com que o overlay fique atrás do conteúdo */
 }
 
-body .container:hover {
+body .container-rest:hover {
     box-shadow: none;
 }
 
 /* Estilos gerais do contêiner */
-.container {
+.container-rest {
+    margin-left: 300px;
+    width: 1200px;
     max-width: 1200px; /* Reduzi o max-width para layouts maiores */
     height: 650px;
-    margin: 50px auto;
     padding: 40px;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -89,7 +92,7 @@ input[type="text"]:focus {
 }
 
 /* Layout do formulário */
-.form-container {
+.form-container-rest {
     display: flex;
     justify-content: space-between;
     gap: 40px;
@@ -110,7 +113,7 @@ input#numero_restaurante {
 }
 
 /* Botão */
-.btn {
+.btn-rest {
     margin-top: 50px;
     width: 100%;
     padding: 15px;
@@ -123,7 +126,7 @@ input#numero_restaurante {
     transition: background-color 0.3s;
 }
 
-.btn:hover {
+.btn-rest:hover {
     background-color: #007676;
     color: #fff;
 }

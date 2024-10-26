@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import supabase from "@/supabase"; // Supondo que o cliente Supabase esteja configurado
 import Swal from 'sweetalert2'; // Para as mensagens de sucesso e erro
 import Link from 'next/link';
+import style from "./cadRest.css"; 
 
 const CriarConta = () => {
   const [formData, setFormData] = useState({
@@ -96,9 +97,8 @@ const CriarConta = () => {
   };
 
   return (
-    <div className="wrapper">
-      <div className="container">
-        <form id="formulario_final" className="form-container" onSubmit={handleSubmit}>
+      <div className="container-rest">
+        <form id="formulario_rest" className="form-container-rest" onSubmit={handleSubmit}>
           <div className="form-left">
             <h2>Criar Conta</h2>
             <span id="line"></span>
@@ -211,16 +211,14 @@ const CriarConta = () => {
             />
           </div>
 
-          <button type="submit" id="btn_prox" className="btn">
+        <button type="submit" id="btn_prox" className="btn-rest">
             Próximo
           </button>
-
-        </form>
         <p className="login-link">
           Já tem uma conta? <a href="./index.html">Faça o login</a>
         </p>
+        </form>
       </div>
-    </div>
   );
 };
 
