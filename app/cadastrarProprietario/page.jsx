@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useNavigate } from 'next/router';
+import { useNavigate, useRouter } from 'next/navigation';
 import supabase from "@/supabase"; // Supondo que o cliente Supabase esteja configurado
 import Swal from 'sweetalert2'; // Para as mensagens de sucesso e erro
 import Link from 'next/link';
 import style from "./cadProp.css"; 
 
 const CriarProp = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     nomeProprietario: '',
     cpf: '',
@@ -50,35 +51,40 @@ const CriarProp = () => {
         cpf: formData.cpf,
         endereco: insertedAddress[0].id, // Referência ao ID do endereço inserido
       };
-  
-      const { error: errorProprietario } = await supabase
-        .from("Proprietario")
-        .insert(proprietario);
-  
-      if (errorProprietario) {
-        throw new Error("Erro ao salvar o Proprietario");
-      }
+      
+    // Tenta inserir o proprietário e obtém o ID do registro inserido
+const { data: insertedProprietario, error: errorProprietario } = await supabase
+.from("Proprietario")
+.insert(proprietario)
+.select("id");
+
+if (errorProprietario || !insertedProprietario || insertedProprietario.length === 0) {
+throw new Error("Erro ao salvar o Proprietario ou o ID retornado é nulo");
+}
+
+// Obtém o ID do proprietário inserido
+const proprietarioId = insertedProprietario[0].id;
 
       // Step 1: Fetch the last restaurant record
       const { data: lastRestaurant, error: fetchError } = await supabase
         .from("Restaurante")
-        .select("*")
+        .select("id")
         .order("id", { ascending: false }) // Assuming 'id' is the primary key
         .limit(1)
         .single(); // Get the last record
 
-      if (fetchError) {
-        throw new Error("Error fetching the last restaurant record");
+      if (fetchError || !lastRestaurant) {
+        throw new Error("Erro ao obter o último restaurante");
       }
 
       // Step 2: Update the last restaurant record with the owner ID
       const { error: updateError } = await supabase
         .from("Restaurante")
-        .update({ proprietario: proprietario.id }) // Update the owner ID
-        .eq("id", lastRestaurant.id); // Match the last restaurant's ID
+        .update({ proprietario: insertedProprietario[0].id })
+        .eq("id", lastRestaurant.id);
 
       if (updateError) {
-        throw new Error("Error updating the restaurant record");
+        throw new Error("Erro ao atualizar o restaurante com o ID do proprietário");
       }
   
       // Exibe a mensagem de sucesso usando SweetAlert2
@@ -90,8 +96,10 @@ const CriarProp = () => {
         customClass: {
           confirmButton: 'btn-confirm', // Classe personalizada para o botão de confirmação
         }
-      });
-    } catch (error) {
+      }).then(() => {
+        router.push("/login");
+    });
+  } catch (error) {
       console.error(error);
   
   
@@ -228,7 +236,7 @@ const CriarProp = () => {
             onChange={handleInputChange}
           />
         </div>
-        <button type="submit" id="btn_prox" className="btn-rest">
+        <button onClick={()=> router.push("/login")} type="submit" id="btn_prox" className="btn-rest">
           Concluir
         </button>
       </form>

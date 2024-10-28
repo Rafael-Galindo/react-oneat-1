@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useNavigate } from 'next/router';
 import supabase from "@/supabase"; // Supondo que o cliente Supabase esteja configurado
 import Swal from 'sweetalert2'; // Para as mensagens de sucesso e erro
 import Link from 'next/link';
 import style from "./cadRest.css"; 
+import { useRouter } from "next/navigation";
 
 const CriarConta = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     nomeRestaurante: '',
     cnpj: '',
@@ -209,10 +210,9 @@ const CriarConta = () => {
           />
         </div>
         
-        <Link href="/cadastrarProprietario"><button type="submit" id="btn_prox" className="btn-rest">
+        <button onClick={()=> router.push("/cadastrarProprietario")} type="submit" id="btn_prox" className="btn-rest">
           Próximo
         </button>
-        </Link>
       </form>
       <p className="login-link">
         Já tem uma conta? <a href="./index.html">Faça o login</a>
