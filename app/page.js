@@ -1,7 +1,7 @@
-import Login from './login/page.jsx'
+import Clientes from './clientes/page.jsx'
 
 export default function Home() {
   return (
-      <Login />
+      <Clientes />
   );
 }
