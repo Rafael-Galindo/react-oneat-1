@@ -1,7 +1,7 @@
-import Clientes from './clientes/page.jsx'
+import Produto from './produtos/page.jsx'
 
 export default function Home() {
   return (
-      <Clientes />
+      <Produto />
   );
 }

@@ -1,0 +1,28 @@
+/* components/Pagination.css */
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+  
+.pagination-container button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #e0f4f1;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+  
+.pagination-container button.active {
+    background-color: #68c8b8;
+    color: white;
+}
+  
+.pagination-container button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
